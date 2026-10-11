@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="vi" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STEMLab Vietnam - Kho Tài Liệu STEM & Lập Trình Lớp 6 - 12</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #f8fafc; color: #0f172a; }
+        .clean-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .clean-card:hover {
+            border-color: #0284c7;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px -6px rgba(2, 132, 199, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col justify-between">
+
+    <!-- Header / Navigation Bar -->
+    <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchView('store')">
+                <div class="w-10 h-10 rounded-xl bg-sky-600 flex items-center justify-center text-white font-bold">
+                    <i class="fa-solid fa-atom text-xl"></i>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <span class="text-xl font-black tracking-tight text-slate-900">STEMLab</span>
+                    <span class="text-[10px] font-mono bg-sky-50 text-sky-700 border border-sky-200 px-1.5 py-0.5 rounded font-bold">LỚP 6-12</span>
+                </div>
+            </div>
+
+            <nav class="hidden md:flex items-center space-x-1 font-semibold text-xs text-slate-600">
+                <button id="nav-btn-store" onclick="switchView('store')" class="px-3.5 py-2 rounded-lg transition bg-sky-50 text-sky-700 font-bold">
+                    <i class="fa-solid fa-store mr-1"></i> Cửa Hàng
+                </button>
+                <button id="nav-btn-purchased" onclick="switchView('purchased')" class="px-3.5 py-2 rounded-lg transition hover:bg-slate-100 relative">
+                    <i class="fa-solid fa-box-archive text-emerald-600 mr-1"></i> Tài Liệu Đã Mua
+                    <span id="purchased-badge" class="hidden bg-emerald-500 text-white text-[9px] px-1.5 py-0.5 rounded-full font-mono font-bold">0</span>
+                </button>
+                <button id="nav-btn-vault" onclick="switchView('vault')" class="px-3.5 py-2 rounded-lg transition hover:bg-slate-100">
+                    <i class="fa-solid fa-book-open text-amber-500 mr-1"></i> Kho Tàng STEM
+                </button>
+                <button id="nav-btn-admin" onclick="requestAdminAccess()" class="px-3.5 py-2 rounded-lg transition hover:bg-slate-100 text-indigo-600 font-bold ml-4 border-l pl-4 border-slate-200">
+                    <i class="fa-solid fa-lock mr-1"></i> Quản Lý (Admin)
+                </button>
+            </nav>
+
+            <div class="flex items-center space-x-3">
+                <button onclick="toggleCartDrawer()" class="relative p-2 rounded-xl bg-slate-100 text-slate-700">
+                    <i class="fa-solid fa-cart-shopping text-base"></i>
+                    <span id="cart-badge" class="absolute -top-1 -right-1 bg-sky-600 text-white text-[10px] font-mono font-bold w-5 h-5 rounded-full flex items-center justify-center">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Banner -->
+    <div id="hero-banner" class="bg-gradient-to-r from-sky-900 via-slate-900 to-indigo-950 text-white py-10 border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div>
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-sky-500/20 text-sky-300 border border-sky-400/30 mb-3">
+                    <i class="fa-solid fa-graduation-cap mr-1.5"></i>CHUẨN GIÁO DỤC STEM THCS - THPT
+                </span>
+                <h1 class="text-2xl sm:text-3xl font-extrabold">Kho Tài Liệu STEM & Lập Trình Chuẩn Quốc Gia</h1>
+                <p class="mt-2 text-slate-300 text-xs sm:text-sm">Giáo án Word/PDF, Mã nguồn Python, C++, Scratch và Bản vẽ CAD cho Học sinh Lớp 6 - 12.</p>
+            </div>
+            <div class="w-full md:w-auto">
+                <div class="relative max-w-xs w-full">
+                    <input type="text" id="search-input" onkeyup="handleSearch(this.value)" placeholder="Tìm kiếm tài liệu..." class="w-full pl-9 pr-4 py-2.5 bg-slate-800/80 border border-slate-700 rounded-xl text-xs text-white focus:outline-none focus:border-sky-500">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400 text-xs"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN VIEW: STORE FRONT -->
+    <main id="tab-store" class="flex-grow max-w-7xl mx-auto px-4 py-8 w-full">
+        <!-- Grade Filter Chips -->
+        <div class="flex items-center space-x-1.5 overflow-x-auto pb-3 mb-6 border-b border-slate-200 font-mono text-xs">
+            <span class="text-slate-400 font-bold uppercase mr-2"><i class="fa-solid fa-filter mr-1"></i>Khối Lớp:</span>
+            <button onclick="filterGrade('all')" class="grade-btn px-3 py-1.5 rounded-lg bg-sky-600 text-white font-bold whitespace-nowrap" data-grade="all">TẤT CẢ (LỚP 6-12)</button>
+            <button onclick="filterGrade('lop6')" class="grade-btn px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-slate-600 whitespace-nowrap" data-grade="lop6">LỚP 6</button>
+            <button onclick="filterGrade('lop7')" class="grade-btn px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-slate-600 whitespace-nowrap" data-grade="lop7">LỚP 7</button>
+            <button onclick="filterGrade('lop8')" class="grade-btn px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-slate-600 whitespace-nowrap" data-grade="lop8">LỚP 8</button>
+            <button onclick="filterGrade('lop9')" class="grade-btn px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-slate-600 whitespace-nowrap" data-grade="lop9">LỚP 9</button>
+            <button onclick="filterGrade('lop10')" class="grade-btn px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-slate-600 whitespace-nowrap" data-grade="lop10">LỚP 10</button>
+            <button onclick="filterGrade('lop11')" class="grade-btn px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-slate-600 whitespace-nowrap" data-grade="lop11">LỚP 11</button>
+            <button onclick="filterGrade('lop12')" class="grade-btn px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-slate-600 whitespace-nowrap" data-grade="lop12">LỚP 12</button>
+        </div>
+
+        <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-white text-slate-500 py-6 border-t border-slate-200 text-center text-xs font-mono">
+        <div>&copy; 2026 STEMLab Vietnam - Kho Tài Liệu STEM Chuẩn Lớp 6 - 12</div>
+    </footer>
+
+    <script>
+        let products = [
+            { id: 101, title: "Giáo Án Micro:bit & Cảm Biến (Lớp 6)", grade: "lop6", price: 120000, description: "STEM Robotics cho Lớp 6 với Micro:bit v2.", snippet: "from microbit import *\nwhile True:\n display.scroll('STEM')", fullContent: "FULL CODE MICROBIT", downloadUrl: "#" },
+            { id: 102, title: "Lập Trình Scratch 3.0 Game Toán (Lớp 7)", grade: "lop7", price: 135000, description: "Thiết kế 10 dự án game tương tác Lớp 7.", snippet: "when green flag clicked\nforever", fullContent: "FULL SOURCE CODE SCRATCH", downloadUrl: "#" },
+            { id: 103, title: "Mạch Điện Tử LED Trái Tim (Lớp 8)", grade: "lop8", price: 140000, description: "Thực hành Vật Lý Điện Lớp 8 IC NE555.", snippet: "R_total = R1 + R2", fullContent: "FULL SCHEMATIC PDF", downloadUrl: "#" }
+        ];
+
+        function renderProducts() {
+            const grid = document.getElementById('product-grid');
+            if(!grid) return;
+            grid.innerHTML = products.map(p => `
+                <div class="clean-card rounded-2xl p-5 flex flex-col justify-between">
+                    <div>
+                        <span class="bg-sky-50 text-sky-700 border border-sky-200 font-mono text-[10px] font-bold px-2 py-0.5 rounded uppercase">${p.grade}</span>
+                        <h3 class="font-extrabold text-slate-900 text-sm mt-2">${p.title}</h3>
+                        <p class="text-xs text-slate-500 mt-1">${p.description}</p>
+                    </div>
+                    <div class="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between">
+                        <span class="text-sm font-black font-mono text-slate-900">${p.price.toLocaleString()} đ</span>
+                        <button onclick="alert('Đã thêm vào giỏ!')" class="px-3.5 py-2 bg-sky-600 text-white text-xs font-bold rounded-xl">Thêm Giỏ</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        window.onload = renderProducts;
+    </script>
+</body>
+</html>
