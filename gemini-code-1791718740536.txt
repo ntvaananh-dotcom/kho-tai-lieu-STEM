@@ -1,0 +1,3 @@
+Bạn có thể đọc file hướng dẫn chi tiết ở khung bên phải màn hình. 
+
+Nếu bạn muốn thử sức ở bước nào (ví dụ: *cách cài đặt VS Code*, *cách chỉnh màu sắc*, hay *cách đưa link web lên mạng miễn phí*), hãy nói cho tôi biết để tôi hướng dẫn từng bước cụ thể nhé!
